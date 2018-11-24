@@ -51,5 +51,4 @@ steps:
   - shell: |
       echo Disk usage of this installation:
       du -sh "$ROOT"
-      qemu-img convert -O qcow2 {{ output }} {{ output }}.qc2
     root-fs: rootfs

@@ -171,7 +171,7 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
                 'grub-install',
                 '--target=' + grub_target,
                 '--no-nvram',
-                '--force-extra-removable',
+#                '--force-extra-removable',
                 '--no-floppy',
                 '--modules=part_msdos part_gpt',
                 '--grub-mkdevicemap=/boot/grub/device.map',

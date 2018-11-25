@@ -4,9 +4,9 @@ block_cipher = None
 
 
 a = Analysis(['vmdb2'],
-             pathex=['/opt/vmdb2'],
+             pathex=[],
              binaries=[],
-             datas=[],
+             datas=[('vmdb', 'vmdb'), ('vmdb/plugins', 'vmdb/plugins')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],

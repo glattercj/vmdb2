@@ -1,0 +1,18 @@
+Step: `overlay`
+-----------------------------------------------------------------------------
+
+Copy overlay directories into the root filesystem.
+
+Step keys:
+
+* `overlay` &mdash; REQUIRED; value is the tag for the root filesystem.
+
+* `paths` &mdash; REQUIRED; value is an ordered list of overlays to copy.
+
+Example (in the .vmdb file):
+
+    - overlay: rootfs
+      paths:
+        - /tmp/foo
+        - /tmp/bar
+        - /tmp/baz

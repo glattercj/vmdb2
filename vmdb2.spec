@@ -1,5 +1,10 @@
 # -*- mode: python -*-
 
+# 1) apt install python3-pip python3-yaml python3-jinja2 python3-cliapp
+# **NOT IN PYENV***
+# 2) pip install pyinstaller
+# 3) pyinstaller vmdb2.spec
+
 block_cipher = None
 
 

@@ -38,7 +38,7 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
         tag = step['target']
         target = state.tags.get_mount_point(tag)
         mirror = step['mirror']
-        variant = step.get('variant', '-')
+        variant = step.get('variant', 'minbase')
         opts = step.get('options', '').split()
         if not (suite and tag and target and mirror):
             raise Exception('missing arg for debootstrap step')

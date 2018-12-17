@@ -9,7 +9,13 @@ Step keys:
 
 * `size` &mdash; REQUIRED; size of the image.
 
+* `format` &mdash; OPTIONAL; qemu image file format; default is 'raw'.
+
+* `compress` &mdash; OPTIONAL; 'true' to compress disk image; default is 'false'.
+
 Example (in the .vmdb file):
 
     - mkimg: "{{ output }}"
-      size: 4G
+      size: 5G
+      format: qcow2
+      compress: "true"

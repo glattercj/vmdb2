@@ -17,6 +17,7 @@
 
 
 
+import os
 import cliapp
 
 import vmdb
@@ -38,6 +39,24 @@ class MkimgStepRunner(vmdb.StepRunnerInterface):
         return ['mkimg']
 
     def run(self, step, settings, state):
-        filename = step['mkimg']
         size = step['size']
-        vmdb.runcmd(['qemu-img', 'create', '-f', 'raw', filename, size])
+        state.filename = step['mkimg']
+        state.fmt = step.get('format', 'raw')
+        state.compress = step.get('compress', 'false')
+        vmdb.runcmd(['qemu-img', 'create', '-f', 'raw', state.filename, size])
+
+    def teardown(self, step, settings, state):
+        coremelt = getattr(state, 'COREMELT', False)
+        if not coremelt and state.fmt != 'raw':
+            args = ['qemu-img', 'convert']
+            tag = ''
+            if state.compress == 'true':
+                args.append('-c')
+                tag = '_c'
+            parts = os.path.splitext(os.path.basename(state.filename))
+            name = parts[0]
+            ext = parts[1]
+            name = name + '.qc2' if state.fmt == 'qcow2' else name + tag + ext
+            args.extend(['-O', state.fmt, state.filename, name])
+            vmdb.runcmd(args)
+            vmdb.runcmd(['rm', '-f', state.filename])

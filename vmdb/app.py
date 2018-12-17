@@ -58,6 +58,7 @@ class Vmdb2(cliapp.Application):
         steps_taken, core_meltdown = self.run_steps(steps, state)
         if core_meltdown:
             vmdb.progress('Something went wrong, cleaning up!')
+            state.COREMELT = True
         else:
             vmdb.progress('All went fine, cleaning up.')
         self.run_teardowns(steps_taken, state)

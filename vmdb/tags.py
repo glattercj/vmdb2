@@ -39,6 +39,10 @@ class Tags:
         item = self._get(tag)
         return item['mount_point']
 
+    def get_fstype(self, tag):
+        item = self._get(tag)
+        return item['fstype']
+
     def append(self, tag):
         if tag in self._tags:
             raise TagInUse(tag)
@@ -46,6 +50,7 @@ class Tags:
         self._tags[tag] = {
             'dev': None,
             'mount_point': None,
+            'fstype': None,
         }
 
     def set_dev(self, tag, dev):
@@ -59,6 +64,12 @@ class Tags:
         if item['mount_point'] is not None:
             raise AlreadyMounted(tag)
         item['mount_point'] = mount_point
+
+    def set_fstype(self, tag, fstype):
+        item = self._get(tag)
+        if item['fstype'] is not None:
+            raise AlreadyHasFsType(tag)
+        item['fstype'] = fstype
 
     def _get(self, tag):
         item = self._tags.get(tag)
@@ -89,3 +100,9 @@ class AlreadyMounted(Exception):
 
     def __init__(self, tag):
         super().__init__('Already mounted tag: {}'.format(tag))
+
+
+class AlreadyHasFsType(Exception):
+
+    def __init__(self, tag):
+        super().__init__('Already has filesystem type: {}'.format(tag))

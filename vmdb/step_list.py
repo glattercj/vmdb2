@@ -19,13 +19,16 @@
 import cliapp
 
 
-class StepRunnerInterface(object):  # pragma: no cover
+class StepRunnerInterface:  # pragma: no cover
 
     def get_required_keys(self):
         raise NotImplementedError()
 
     def run(self, step_spec, settings, state):
         raise NotImplementedError()
+
+    def run_even_if_skipped(self, step_spec, settings, state):
+        pass
 
     def teardown(self, step_spec, settings, state):
         # Default implementation does nop, so that sub-classes don't
@@ -50,7 +53,7 @@ class StepRunnerInterface(object):  # pragma: no cover
         return getattr(state, value, False)
 
 
-class StepRunnerList(object):
+class StepRunnerList:
 
     def __init__(self):
         self._runners = []

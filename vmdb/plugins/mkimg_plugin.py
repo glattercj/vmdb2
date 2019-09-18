@@ -48,15 +48,16 @@ class MkimgStepRunner(vmdb.StepRunnerInterface):
     def teardown(self, step, settings, state):
         coremelt = getattr(state, 'COREMELT', False)
         if not coremelt and state.fmt != 'raw':
-            args = ['qemu-img', 'convert']
+            args = ['qemu-img', 'convert', '-p']
             tag = ''
             if state.compress == 'true':
                 args.append('-c')
                 tag = '_c'
+            path = os.path.dirname(state.filename) + "/"
             parts = os.path.splitext(os.path.basename(state.filename))
             name = parts[0]
             ext = parts[1]
             name = name + '.qc2' if state.fmt == 'qcow2' else name + tag + ext
-            args.extend(['-O', state.fmt, state.filename, name])
+            args.extend(['-O', state.fmt, state.filename, path + name])
             vmdb.runcmd(args)
             vmdb.runcmd(['rm', '-f', state.filename])

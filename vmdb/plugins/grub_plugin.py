@@ -171,7 +171,7 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
         grub = '/boot/grub/grub.cfg'
         uuid = ''
         try:
-            uuid = open('/grub-uuid').readlines().strip()
+            uuid = vmdb.runcmd(['cat', '/tmp/grub-uuid']).strip().decode('utf-8')
         except:
             uuid = vmdb.runcmd_chroot(chroot, ['awk', '/set=root/ {print $5}', grub])
             uuid = uuid.split()[0].decode('utf-8')

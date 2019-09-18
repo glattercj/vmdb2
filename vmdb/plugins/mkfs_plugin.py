@@ -48,6 +48,13 @@ class MkfsStepRunner(vmdb.StepRunnerInterface):
                 cmd.append('-L')
             cmd.append(step['label'])
         cmd.append(device)
-        vmdb.runcmd(cmd)
+        output = vmdb.runcmd(cmd)
+        try:
+            output = output.split()
+            idx = output.index('UUID:')
+            with open('/grub-uuid', 'w') as file_:
+                file_.write(output[idx+1])
+        except:
+            continue
 
         state.tags.set_fstype(tag, fstype)

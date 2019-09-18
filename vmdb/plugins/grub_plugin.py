@@ -168,7 +168,8 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
         vmdb.runcmd_chroot(chroot, ['grub-mkconfig', '-o', '/boot/grub/grub.cfg'])
 
         # fix up UUID in grub.cfg
-        uuid = vmdb.runcmd_chroot(chroot, ['blkid', '-o', 'value', '-s', 'UUID'])
+        grub = '/boot/grub/grub.cfg'
+        uuid = vmdb.runcmd_chroot(chroot, ['grep', 'set=root', grub, '|', 'awk', 'NR==1{print $5}'])
         sed = 's/root=\/dev\/mapper\/[^ ]* \(.*\)/root=UUID={} \1/g'.format(uuid)
         vmdb.runcmd_chroot(chroot, ['sed', '-i', '-e', sed, '/boot/grub/grub.cfg'])
 

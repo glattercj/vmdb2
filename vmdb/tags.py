@@ -16,12 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-# Unmount a directory, including any mount points under that
-# directory. If /mnt/foo is given, and /mnt/foo/bar is also mounted,
-# unmount /mnt/foo/bar first, and /mnt/foo then. Look for sub-mounts
-# in /proc/mounts.
-
-
 import vmdb
 
 
@@ -45,6 +39,14 @@ class Tags:
         item = self._get(tag)
         return item['mount_point']
 
+    def get_fstype(self, tag):
+        item = self._get(tag)
+        return item['fstype']
+
+    def get_target_mount_point(self, tag):
+        item = self._get(tag)
+        return item['target_mount_point']
+
     def append(self, tag):
         if tag in self._tags:
             raise TagInUse(tag)
@@ -52,6 +54,8 @@ class Tags:
         self._tags[tag] = {
             'dev': None,
             'mount_point': None,
+            'fstype': None,
+            'target_mount_point': None,
         }
 
     def set_dev(self, tag, dev):
@@ -65,6 +69,18 @@ class Tags:
         if item['mount_point'] is not None:
             raise AlreadyMounted(tag)
         item['mount_point'] = mount_point
+
+    def set_fstype(self, tag, fstype):
+        item = self._get(tag)
+        if item['fstype'] is not None:
+            raise AlreadyHasFsType(tag)
+        item['fstype'] = fstype
+
+    def set_target_mount_point(self, tag, target_mount_point):
+        item = self._get(tag)
+        if item['target_mount_point'] is not None:
+            raise AlreadyHasTargetMountPoint(tag)
+        item['target_mount_point'] = target_mount_point
 
     def _get(self, tag):
         item = self._tags.get(tag)
@@ -95,3 +111,15 @@ class AlreadyMounted(Exception):
 
     def __init__(self, tag):
         super().__init__('Already mounted tag: {}'.format(tag))
+
+
+class AlreadyHasFsType(Exception):
+
+    def __init__(self, tag):
+        super().__init__('Already has filesystem type: {}'.format(tag))
+
+
+class AlreadyHasTargetMountPoint(Exception):
+
+    def __init__(self, tag):
+        super().__init__('Already has target mount point: {}'.format(tag))

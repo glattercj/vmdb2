@@ -28,7 +28,7 @@ class TagsTests(unittest.TestCase):
         tags = vmdb.Tags()
         self.assertEqual(tags.get_tags(), [])
 
-    def test_tells_if_tag_is_used(self):
+    def test_tells_if_tag_exists(self):
         tags = vmdb.Tags()
         self.assertFalse(tags.has_tag('foo'))
         tags.append('foo')
@@ -72,6 +72,18 @@ class TagsTests(unittest.TestCase):
         self.assertEqual(tags.get_tags(), ['first'])
         self.assertEqual(tags.get_dev('first'), None)
         self.assertEqual(tags.get_mount_point('first'), '/mnt/foo')
+
+    def test_mount_point_is_uncached_by_default(self):
+        tags = vmdb.Tags()
+        tags.append('first')
+        tags.set_mount_point('first', '/mnt/foo')
+        self.assertFalse(tags.is_cached('first'))
+
+    def test_mount_point_can_be_made_cached(self):
+        tags = vmdb.Tags()
+        tags.append('first')
+        tags.set_mount_point('first', '/mnt/foo', cached=True)
+        self.assertTrue(tags.is_cached('first'))
 
     def test_set_dev_raises_error_for_unknown_tag(self):
         tags = vmdb.Tags()

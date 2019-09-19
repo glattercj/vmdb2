@@ -166,12 +166,24 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
             self.add_grub_serial_console(chroot)
 
         vmdb.runcmd_chroot(chroot, ['grub-mkconfig', '-o', '/boot/grub/grub.cfg'])
+
+        # fix up UUID in grub.cfg
+        grub = '/boot/grub/grub.cfg'
+        uuid = ''
+        try:
+            uuid = vmdb.runcmd(['cat', '/tmp/grub-uuid']).strip().decode('utf-8')
+        except:
+            uuid = vmdb.runcmd_chroot(chroot, ['awk', '/set=root/ {print $5}', grub])
+            uuid = uuid.split()[0].decode('utf-8')
+        sed = 's/root=\/dev\/mapper\/[^ ]* /root=UUID={} /g'.format(uuid)
+        vmdb.runcmd_chroot(chroot, ['sed', '-i', '-e', sed, '/boot/grub/grub.cfg'])
+
         vmdb.runcmd_chroot(
             chroot, [
                 'grub-install',
                 '--target=' + grub_target,
                 '--no-nvram',
-#                '--force-extra-removable',
+#                '--force-extra-removable', # only for efi
                 '--no-floppy',
                 '--modules=part_msdos part_gpt',
                 '--grub-mkdevicemap=/boot/grub/device.map',

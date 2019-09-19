@@ -7,48 +7,50 @@ steps:
 
   - mkpart: primary
     device: "{{ output }}"
-    start: 1M
-    end: 100M
-    tag: boot
+    start: 0%
+    end: 75%
+    tag: root
 
   - mkpart: primary
     device: "{{ output }}"
-    start: 100M
+    start: 75%
     end: 100%
-    tag: rootfs
+    tag: boot
 
   - kpartx: "{{ output }}"
+
+  - mkfs: ext4
+    partition: root
 
   - mkfs: ext2
     partition: boot
 
-  - mkfs: ext4
-    partition: rootfs
+  - mount: root
 
   - mount: boot
 
-  - mount: rootfs
-
-  - unpack-rootfs: rootfs
+  - unpack-rootfs: root
 
   - debootstrap: bionic
     mirror: http://us.archive.ubuntu.com/ubuntu/
     options: "--include=linux-image-generic,linux-headers-generic,initramfs-tools,net-tools,isc-dhcp-client,openssh-server,init,iputils-ping,vim,less,netbase,curl,ethtool,rsync,ifupdown,dbus --components=main,universe,restricted,multiverse"
-    target: rootfs
+    target: root
     unless: rootfs_unpacked
 
-  - cache-rootfs: rootfs
+  - cache-rootfs: root
     unless: rootfs_unpacked
 
-  - chroot: rootfs
+  - chroot: root
     shell: |
-      sed -i '/^root:[^:]*:/s//root::/' /etc/passwd
+      passwd --delete root
       echo foobar > /etc/hostname
 
+  - fstab: root
+
   - grub: bios
-    tag: rootfs
+    tag: root
 
   - shell: |
       echo Disk usage of this installation:
       du -sh "$ROOT"
-    root-fs: rootfs
+    root-fs: root

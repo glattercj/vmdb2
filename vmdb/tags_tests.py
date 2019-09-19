@@ -24,7 +24,7 @@ import vmdb
 
 class TagsTests(unittest.TestCase):
 
-    def test_lists_not_tags_initally(self):
+    def test_lists_no_tags_initially(self):
         tags = vmdb.Tags()
         self.assertEqual(tags.get_tags(), [])
 
@@ -96,3 +96,29 @@ class TagsTests(unittest.TestCase):
         tags.set_dev('first', '/dev/foo')
         with self.assertRaises(vmdb.AlreadyHasDev):
             tags.set_dev('first', '/dev/foo')
+
+    def test_set_fstype(self):
+        tags = vmdb.Tags()
+        tags.append('first')
+        tags.set_fstype('first', 'ext4')
+        self.assertEqual(tags.get_fstype('first'), 'ext4')
+
+    def test_set_fstype_raises_error_for_double_fstype(self):
+        tags = vmdb.Tags()
+        tags.append('first')
+        tags.set_fstype('first', 'ext3')
+        with self.assertRaises(vmdb.AlreadyHasFsType):
+            tags.set_fstype('first', 'ext4')
+
+    def test_set_target_mount_point(self):
+        tags = vmdb.Tags()
+        tags.append('first')
+        tags.set_target_mount_point('first', '/boot')
+        self.assertEqual(tags.get_target_mount_point('first'), '/boot')
+
+    def test_set_target_mount_point_raises_error_for_double_target_mount_point(self):
+        tags = vmdb.Tags()
+        tags.append('first')
+        tags.set_target_mount_point('first', '/boot')
+        with self.assertRaises(vmdb.AlreadyHasTargetMountPoint):
+            tags.set_target_mount_point('first', '/')

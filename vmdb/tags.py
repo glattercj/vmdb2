@@ -87,6 +87,18 @@ class Tags:
             raise AlreadyHasTargetMountPoint(tag)
         item['target_mount_point'] = target_mount_point
 
+    def set_fstype(self, tag, fstype):
+        item = self._get(tag)
+        if item['fstype'] is not None:
+            raise AlreadyHasFsType(tag)
+        item['fstype'] = fstype
+
+    def set_target_mount_point(self, tag, target_mount_point):
+        item = self._get(tag)
+        if item['target_mount_point'] is not None:
+            raise AlreadyHasTargetMountPoint(tag)
+        item['target_mount_point'] = target_mount_point
+
     def _get(self, tag):
         item = self._tags.get(tag)
         if item is None:

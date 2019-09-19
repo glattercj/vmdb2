@@ -16,7 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import cliapp
 
 import vmdb
@@ -48,6 +47,10 @@ class MkfsStepRunner(vmdb.StepRunnerInterface):
                 cmd.append('-L')
             cmd.append(step['label'])
         cmd.append(device)
-        vmdb.runcmd(cmd)
+        output = vmdb.runcmd(cmd)
+        output = output.split()
+        idx = output.index(b'UUID:')
+        uuid = output[idx+1].decode('utf-8')
+        vmdb.runcmd(['echo', uuid], ['tee', '/tmp/grub-uuid'])
 
         state.tags.set_fstype(tag, fstype)

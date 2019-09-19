@@ -2,6 +2,17 @@
 
 set -eu
 
+cleanup()
+{
+    rm -rf "$tmp"
+}
+
+tmp="$(mktemp -d)"
+trap cleanup EXIT
+
+version="$(git describe)"
+sed "s/^date: .*/date: $version/" vmdb2.mdwn > "$tmp/prelude.mdwn"
+
 pandoc \
     --self-contained \
     --standalone \
@@ -9,10 +20,9 @@ pandoc \
     --toc \
     --number-sections \
     -o vmdb2.html \
-    vmdb2.mdwn vmdb/plugins/*.mdwn
+    "$tmp/prelude.mdwn" vmdb/plugins/*.mdwn
 
 pandoc \
-    --pdf-engine=xelatex \
     --toc \
     --number-sections \
     -Vdocumentclass=report \
@@ -23,4 +33,4 @@ pandoc \
     -Vmonofont:FreeMonoBold \
     '-Vgeometry:top=2cm, bottom=2.5cm, left=2cm, right=1cm' \
     -o vmdb2.pdf \
-    vmdb2.mdwn vmdb/plugins/*.mdwn
+    "$tmp/prelude.mdwn" vmdb/plugins/*.mdwn

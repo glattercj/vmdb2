@@ -1,7 +1,10 @@
 README for vmdb2 or vmdebootstrap 2nd generation     ; -*- mode: markdown;-*-
 =============================================================================
 
-vmdb2 is a program for producing a disk image with Debian installed.
+[vmdb2][] is a program for producing a disk image with Debian
+installed.
+
+[vmdb2]: https://vmdb2.liw.fi/
 
 Introduction
 -----------------------------------------------------------------------------
@@ -156,6 +159,14 @@ also [CoverageTestRunner][] for running the unit tests.
 
 [cmdtest]: http://liw.fi/cmdtest/
 [CoverageTestRunner]: http://liw.fi/coverage-test-runner/
+
+
+Contact
+-----------------------------------------------------------------------------
+
+To contact Lars, email is best: `liw@liw.fi`.
+
+There is an IRC channel for vmdb2: irc.oftc.net network, `#vmdb2`.
 
 
 Legalese

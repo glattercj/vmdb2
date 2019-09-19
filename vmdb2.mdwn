@@ -1,5 +1,7 @@
 ---
-title: vmdb2 manual
+title: Building Debian system images with vmdb2
+author: Lars Wirzenius
+date: work-in-progress
 ...
 
 Introduction
@@ -13,9 +15,34 @@ of architectural problems with the old program. The new program is not
 compatible with the old one; that would've required keeping the
 problems, as well.
 
+This manual is published as HTML at
+<https://vmdb2-manual.liw.fi/> and as a PDF at
+<https://vmdb2-manual.liw.fi/vmdb2.pdf>.
+
+Why vmdb2 given vmdebootstrap already existed
+-----------------------------------------------------------------------------
+
+`vmdebootstrap` was the first attempt by Lars Wirzenius to write a
+tool to build system images. It turned out to not be well designed.
+Specifically, it was not easily extensible to be as flexible as a tool
+of this sort should be.
+
+Why vmdb2 given other tools already exist
+-----------------------------------------------------------------------------
+
+Lars likes to write tools for himself and had some free time. He
+sometimes prefers to write his own tools rather than spend time and
+energy evaluating and improving existing tools. He admits this is a
+character flaw.
+
+Also, he felt ashamed of how messy `vmdebootstrap` turned out to be.
+
+If nobody else likes `vmdb2`, that just means Lars had some fun on his
+own.
+
 
 Installation
------------------------------------------------------------------------------
+=============================================================================
 
 You can get vmdb2 by getting the source code from git:
 
@@ -54,6 +81,8 @@ instructions. A minimal specification file example:
         end: 100%
         tag: root
 
+      - kpartx: "{{ output }}"
+
       - mkfs: ext4
         partition: root
 
@@ -66,10 +95,11 @@ instructions. A minimal specification file example:
       - apt: install
         packages:
           - linux-image-amd64
-        tag: root-fs
+        tag: root
 
       - grub: bios
         tag: root
+        console: serial
 
 The above creates a four gigabyte file, creates a GPT partition table,
 a single partition, with a filesystem, and installs Debian release
@@ -125,7 +155,7 @@ filesystem and stores it into the file as a compress tar archive
 skip running debootstrap needlessly.
 
 The specify which steps should be skipped, the `unless` field can be
-used: `unpack-rootfs` sets the `rootfs-unpacked` flag if it actually
+used: `unpack-rootfs` sets the `rootfs_unpacked` flag if it actually
 unpacks a tarball, and `unless` allows checking for that flag. If the
 tarball doesn't exist, the flag is not set.
 
@@ -133,10 +163,10 @@ tarball doesn't exist, the flag is not set.
 
     - debootstrap: stretch
       target: root
-      unless: rootfs-unpacked
+      unless: rootfs_unpacked
 
     - cache-rootfs: root
-      unless: rootfs-unpacked
+      unless: rootfs_unpacked
 
 If the tarball exists, it's unpacked, and the `debootstrap` and
 `cache-rootfs` steps are skipped.

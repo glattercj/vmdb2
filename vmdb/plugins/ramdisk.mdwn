@@ -1,0 +1,12 @@
+Step: `ramdisk`
+-----------------------------------------------------------------------------
+
+Generate initrd and kernel target files.
+
+Step keys:
+
+* `ramdisk` &mdash; REQUIRED; value is the tag for the root filesystem.
+
+Example (in the .vmdb file):
+
+    - ramdisk: root

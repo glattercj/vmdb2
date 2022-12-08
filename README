@@ -51,6 +51,7 @@ Requirements:
 
 The following tools are used by vmdb2 (Debian package names in brackets).
 
+* `pigz` [pigz, ramdisk command]
 * `kpartx` [kpartx, mkpart command]
 * `parted` [`parted`, mklabel command]
 * `qemu-img` [`qemu-utils`, mkimg command]

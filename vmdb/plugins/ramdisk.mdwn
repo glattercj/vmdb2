@@ -1,7 +1,8 @@
 Step: `ramdisk`
 -----------------------------------------------------------------------------
 
-Generate initrd and kernel target files.
+Generate initrd and kernel target files. Requires `pigz` apt package
+to be installed.
 
 Step keys:
 

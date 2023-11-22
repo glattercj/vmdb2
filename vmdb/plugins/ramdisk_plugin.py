@@ -42,7 +42,7 @@ class RamdiskStepRunner(vmdb.StepRunnerInterface):
         kernel = '{}.kernel'.format(fname)
         cp_kernel = 'find boot/ -type f -name "vmlinu*" -exec cp {{}} {} \;'.format(kernel)
         cmd = ("cd {} && find . -print0 | cpio --quiet --null -ov --format=newc | "
-               "pigz -9 > {} && {}").format(mount_point, initrd, cp_kernel)
+               "xz -9e > {} && {}").format(mount_point, initrd, cp_kernel)
         fd, path = tempfile.mkstemp()
         with open(fd, 'w') as file_:
             file_.write(cmd)

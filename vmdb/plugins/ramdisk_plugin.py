@@ -15,9 +15,9 @@
 #
 # =*= License: GPL-3+ =*=
 
-import tempfile
-
 import cliapp
+import logging
+import tempfile
 
 import vmdb
 
@@ -41,10 +41,14 @@ class RamdiskStepRunner(vmdb.StepRunnerInterface):
         initrd = '{}.initrd'.format(fname)
         kernel = '{}.kernel'.format(fname)
         cp_kernel = 'find boot/ -type f -name "vmlinu*" -exec cp {{}} {} \;'.format(kernel)
-        cmd = ("cd {} && find . -print0 | cpio --quiet --null -ov --format=newc | "
-               "xz -9e > {} && {}").format(mount_point, initrd, cp_kernel)
+        cmd = ("cd {} && find . -print0 | cpio --quiet -0co | "
+               "xz -9e -T0 > {} && {}").format(mount_point, initrd, cp_kernel)
         fd, path = tempfile.mkstemp()
         with open(fd, 'w') as file_:
             file_.write(cmd)
+        logging.info("********************************************************")
+        logging.info("********************************************************")
+        logging.info("*********** Creating ramdisk, please wait... ***********")
+        logging.info("********************************************************")
+        logging.info("********************************************************")
         output = vmdb.runcmd(['bash', path])
-

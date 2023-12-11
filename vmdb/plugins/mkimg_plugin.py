@@ -48,7 +48,7 @@ class MkimgStepRunner(vmdb.StepRunnerInterface):
     def teardown(self, step, settings, state):
         coremelt = getattr(state, 'COREMELT', False)
         if not coremelt and state.fmt != 'raw':
-            args = ['qemu-img', 'convert', '-p']
+            args = ['qemu-img', 'convert', '-p', '-W', '-m16']
             tag = ''
             if state.compress == 'true':
                 args.append('-c')

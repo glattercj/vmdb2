@@ -9,7 +9,17 @@ Step keys:
 
 * `partition` &mdash; REQUIRED; tag for the block device to use.
 
+* `name` &mdash; OPTIONAL; set unique postfix of UUID tmp filename;
+  needed for parallel builds.
+
 Example (in the .vmdb file):
 
     - mkfs: ext4
       partition: root
+
+Same, but with unique UUID filename (ouput = '/path/to/outfile',
+  name = 'outfile'):
+
+    - mkfs: ext4
+      partition: root
+      name: "{{ output.split('/')[-1] }}"

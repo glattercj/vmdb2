@@ -36,6 +36,8 @@ class MkfsStepRunner(vmdb.StepRunnerInterface):
         fstype = step['mkfs']
         tag = step['partition']
         device = state.tags.get_dev(tag)
+        # Optional: make UUID tmp file unique
+        name = f"-{step['name']}" if 'name' in step else ""
 
         cmd = ['/sbin/mkfs', '-t', fstype]
         if 'label' in step:
@@ -51,6 +53,6 @@ class MkfsStepRunner(vmdb.StepRunnerInterface):
         output = output.split()
         idx = output.index(b'UUID:')
         uuid = output[idx+1].decode('utf-8')
-        vmdb.runcmd(['echo', uuid], ['tee', '/tmp/grub-uuid'])
+        vmdb.runcmd(['echo', uuid], ['tee', f'/tmp/grub-uuid{name}'])
 
         state.tags.set_fstype(tag, fstype)
